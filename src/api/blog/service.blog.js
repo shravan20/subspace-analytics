@@ -34,8 +34,8 @@ const getBlogSearch = async (query) => {
         let blogs = await hasuraGetBlog({});
         blogs = blogs["blogs"];
 
-        console.log("Caching information for key:" + query);
-        console.log("Current Cache Size:" + getMemoizedBlogSearch.cache.size);
+        console.log(" 🚀 Caching information for key:" + query);
+        console.log(" 📊 Current Cache Size:" + getMemoizedBlogSearch.cache.size);
 
         if (!query) {
             console.log("Filter not provided")
