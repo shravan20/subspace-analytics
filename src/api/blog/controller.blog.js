@@ -11,7 +11,7 @@ const getBlogsStats = async (request, response, next) => {
 
 const getBlogSearch = async (request, response, next) => {
     try {
-        response.success(await service.getBlogSearch(request.query));
+        response.success(await service.getMemoizedBlogSearch(request.query.query));
     } catch (error) {
         response.error(error);
     }

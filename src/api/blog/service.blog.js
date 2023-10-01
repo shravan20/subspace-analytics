@@ -5,30 +5,12 @@ const _ = require('lodash');
 const getBlogsStats = async () => {
     try {
         let blogs = await hasuraGetBlog({});
-        blogs = blogs["blogs"]
-
-        // Calculate the total number of blogs fetched
-        const totalBlogs = blogs.length;
-        console.log('Total number of blogs fetched:', totalBlogs);
-
-        // Find the blog with the longest title
-        const blogWithLongestTitle = _.maxBy(blogs, blog => blog.title.length);
-        console.log('Blog with the longest title:', blogWithLongestTitle);
-
-        // Determine the number of blogs with titles containing the word "privacy"
-        const blogsWithPrivacyTitle = _.filter(blogs, blog => _.includes(_.toLower(blog.title), 'privacy')).length;
-        console.log('Number of blogs with titles containing the word "privacy":', blogsWithPrivacyTitle);
-
-        // Create an array of unique blog titles (no duplicates)
-        const uniqueBlogTitles = _.uniq(_.map(blogs, 'title'));
-        console.log('Unique blog titles:', uniqueBlogTitles);
-
-        // return blogs
+        blogs = blogs["blogs"];
 
         return {
             totalBlogs: blogs.length, // Total number of blogs fetched
             blogWithLongestTitle: _.maxBy(blogs, blog => blog.title.length), // The title of the longest blog
-            uniqueBlogsWithPrivacyTitle: _.uniq(_.filter(blogs, blog => _.includes(_.toLower(blog.title), 'privacy'))).length, // Number of unique blogs with "privacy" in the title,
+            uniqueBlogsWithPrivacyTitle: _.uniqBy(_.filter(blogs, blog => _.includes(_.toLower(blog.title), 'privacy')), blog => _.toLower(blog.title)).length, // Number of unique blogs with "privacy" in the title,
             blogsWithPrivacyTitle: _.filter(blogs, blog => _.includes(_.toLower(blog.title), 'privacy')).length, // Number of blogs with "privacy" in the title
             uniqueBlogTitles: _.uniq(_.map(blogs, 'title')) // An array of unique blog titles
         };
@@ -46,11 +28,33 @@ const hasuraGetBlog = async (filter = {}) => {
 }
 
 
-const getBlogSearch = (query) => {
-    return {}
+const getBlogSearch = async (query) => {
+
+    try {
+        let blogs = await hasuraGetBlog({});
+        blogs = blogs["blogs"];
+
+        console.log("Caching information for key:" + query);
+        console.log("Current Cache Size:" + getMemoizedBlogSearch.cache.size);
+
+        if (!query) {
+            console.log("Filter not provided")
+            return blogs;
+        }
+
+        blogs = _.filter(blogs, blog => blog.title.toLowerCase().includes(query.toLowerCase()));
+        return blogs;
+
+    } catch (error) {
+        throw error;
+    }
 }
+
+// Memoize the blog search function with a cache duration of 500 seconds
+const getMemoizedBlogSearch = _.memoize(getBlogSearch, (query) => `search-${query}`, 50000);
 
 module.exports = {
     getBlogsStats,
-    getBlogSearch
+    getBlogSearch,
+    getMemoizedBlogSearch
 }

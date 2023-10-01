@@ -4,13 +4,14 @@
         "dotenv": "^16.3.1",
         "express": "^4.18.2",
         "lodash": "^4.17.21",
-        "nodemon": "^3.0.1"
+        "nodemon": "^3.0.1",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.0"
     },
     "name": "subspace-analytics",
     "description": "Blog Analytics with Express and Lodash",
     "version": "1.0.0",
     "main": "app.js",
-    "devDependencies": {},
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "nodemon app.js"

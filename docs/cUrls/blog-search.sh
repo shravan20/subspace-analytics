@@ -1,0 +1,1 @@
+curl --location 'localhost:4000/v1/api/blog-search?query=privacy'
