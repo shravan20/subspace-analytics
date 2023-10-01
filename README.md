@@ -19,3 +19,7 @@
   - <img src="./docs/assets/swagger.png" style="width: 40%;">
 
 - [Where can I find me cUrl requests?](./docs/cUrls/)
+
+Demo:
+This image shows the caching being done via memoize:
+<img src="./docs/assets/cache-demo.png" style="width: 40%;">
